@@ -3,13 +3,15 @@
 import json
 import re
 nicename = re.compile('^[0-9a-zA-Z_-]+$')
+bucketname = re.compile('^[0-9a-z_-]+$')
 
 
 EXPERIMENT_NAME = "wIFR-Sensitivity-Analysis"
-OUTPUT_BUCKET = 's3://blairs-test/bleepbloop:v4'
+OUTPUT_BUCKET = 'wifr-analysis'
 PIPELINE_NAME = "Ken-Pipeline"
-IMAGE_NAME = "blair-kf-pipeline-test"
+IMAGE_NAME = "blair-kf-pipeline-test:v5"
 
+assert bucketname.match(OUTPUT_BUCKET)
 assert nicename.match(EXPERIMENT_NAME)
 assert nicename.match(PIPELINE_NAME)
 
@@ -53,6 +55,7 @@ exp = client.create_experiment(name=EXPERIMENT_NAME)
 ### Register our storage output ###
 ###################################
 import defaults
+defaults.make_bucket(OUTPUT_BUCKET)
 
 ###################################
 ### You can change below this   ###
@@ -97,6 +100,8 @@ compiler.Compiler().compile(
 
 import datetime
 import time
+
+
 
 run = client.run_pipeline(
     exp.id,

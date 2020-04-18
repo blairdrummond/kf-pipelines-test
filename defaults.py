@@ -6,7 +6,7 @@ from kubernetes import client as k8s_client
 import os
 import warnings; warnings.simplefilter('ignore')
 
-minio_endpoint = os.environ.get('MINIO_URL', 'http://minio-service.kubeflow.svc.cluster.local:9000')
+minio_endpoint = os.environ.get('MINIO_URL', 'minio-service.kubeflow.svc.cluster.local:9000')
 minio_key = os.environ.get('MINIO_KEY', 'minio')
 minio_secret = os.environ.get('MINIO_SECRET', 'XXXXXX')
 
@@ -51,6 +51,19 @@ def inject_env_vars():
         inject_env_var(var)
 
 
+def make_bucket(bucket):
+    from minio import Minio
+    from minio.error import ResponseError
+
+    s3Client = Minio(minio_endpoint,
+                 access_key=minio_key,
+                 secret_key=minio_secret)
+
+    if not s3Client.bucket_exists(bucket):
+        s3Client.make_bucket(bucket, location=os.environ['AWS_REGION'])
+
+
 # Do I have to do this in the pipeline call?
 # Or can I do it here?
 #inject_env_vars()
+

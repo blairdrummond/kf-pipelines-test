@@ -31,7 +31,7 @@ echo "$JSON" | jq '.' | tee /output/out.json
 zip -r /tmp/output.zip /output
 
 mc config host add daaas \
-    "$S3_ENDPOINT" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY"
+    "http://$S3_ENDPOINT" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY"
 
 mc cp -r /output "daaas/$OUTPUT"
 
