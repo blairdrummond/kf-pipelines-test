@@ -103,5 +103,6 @@ run = client.run_pipeline(
     EXPERIMENT_NAME + '.zip',
     params={
         'output': OUTPUT_BUCKET
-    }
+    },
+    file_outputs={'output': '/tmp/output.zip'}
 )
