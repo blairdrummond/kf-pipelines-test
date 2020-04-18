@@ -57,7 +57,8 @@ def make_bucket(bucket):
 
     s3Client = Minio(minio_endpoint,
                  access_key=minio_key,
-                 secret_key=minio_secret)
+                     secret_key=minio_secret,
+                     secure=False)
 
     if not s3Client.bucket_exists(bucket):
         s3Client.make_bucket(bucket, location=os.environ['AWS_REGION'])
