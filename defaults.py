@@ -6,7 +6,7 @@ from kubernetes import client as k8s_client
 import os
 import warnings; warnings.simplefilter('ignore')
 
-minio_endpoint = os.environ.get('MINIO_URL', 'minio-service.kubeflow.svc.cluster.local:9000')
+minio_endpoint = os.environ.get('MINIO_URL', 'http://minio-service.kubeflow.svc.cluster.local:9000')
 minio_key = os.environ.get('MINIO_KEY', 'minio')
 minio_secret = os.environ.get('MINIO_SECRET', 'XXXXXX')
 
@@ -35,25 +35,20 @@ def inject_env_var(var):
         )
     )
 
-
-
 def inject_env_vars():
     dsl.get_pipeline_conf().set_image_pull_secrets([
         k8s_client.V1ObjectReference(
-            name="k8scc01covidacr-registry-connection"
-        )
-    ])
-    map(inject_env_var, (
-            'AWS_ACCESS_KEY_ID',
-            'AWS_SECRET_ACCESS_KEY',
-            'AWS_REGION',
-            'S3_REGION',
-            'S3_ENDPOINT',
-            'S3_USE_HTTPS',
-            'S3_VERIFY_SSL'
-       )
-    )
-
+            name="k8scc01covidacr-registry-connection")])
+    for var in (
+        'AWS_ACCESS_KEY_ID',
+        'AWS_SECRET_ACCESS_KEY',
+        'AWS_REGION',
+        'S3_REGION',
+        'S3_ENDPOINT',
+        'S3_USE_HTTPS',
+        'S3_VERIFY_SSL'
+    ):
+        inject_env_var(var)
 
 
 # Do I have to do this in the pipeline call?

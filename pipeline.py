@@ -1,12 +1,12 @@
 #!/bin/python3
 
-
+import json
 import re
 nicename = re.compile('^[0-9a-zA-Z_-]+$')
 
 
 EXPERIMENT_NAME = "wIFR-Sensitivity-Analysis"
-OUTPUT_BUCKET = 's3://blairs-test/bleepbloop'
+OUTPUT_BUCKET = 's3://blairs-test/bleepbloop:v4'
 PIPELINE_NAME = "Ken-Pipeline"
 IMAGE_NAME = "blair-kf-pipeline-test"
 
@@ -65,7 +65,7 @@ def the_pipeline(params, output):
         name=PIPELINE_NAME,
         image=f'k8scc01covidacr.azurecr.io/{IMAGE_NAME}',
         arguments=[
-            '--input', params,
+            '--params', params,
             '--output', output,
         ]
     )
@@ -77,10 +77,11 @@ def the_pipeline(params, output):
 )
 def sensitivity_simulation(output):
     for (i, param) in enumerate(wifr_space()):
-        the_pipeline(param,  f'{output}/data/{i}')
+        the_pipeline(json.dumps(param),  f'{output}/data/{i}')
 
     # Do you need this?
     defaults.inject_env_vars()
+
 
 from kfp import compiler
 compiler.Compiler().compile(
@@ -103,6 +104,5 @@ run = client.run_pipeline(
     EXPERIMENT_NAME + '.zip',
     params={
         'output': OUTPUT_BUCKET
-    },
-    file_outputs={'output': '/tmp/output.zip'}
+    }
 )
