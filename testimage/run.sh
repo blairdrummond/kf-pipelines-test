@@ -20,6 +20,9 @@ while test -n "$1"; do
     shift
 done
 
+echo "JSON: -> _${JSON}_"
+echo "MINIO: -> _${S3_ENDPOINT}_"
+
 test -z "$JSON" && exit 0
 
 mkdir -p /output
@@ -27,12 +30,9 @@ mkdir -p /output
 echo "$JSON" | jq '.' | tee /output/out.json
 zip -r /tmp/output.zip /output
 
-#echo
-#echo
-#
-#mc config host add daaas \
-#    "$S3_ENDPOINT" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY"
-#
-#mc cp -r /output "daaas/$OUTPUT"
+mc config host add daaas \
+    "$S3_ENDPOINT" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY"
+
+mc cp -r /output "daaas/$OUTPUT"
 
 echo "Done."
