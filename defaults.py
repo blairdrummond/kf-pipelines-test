@@ -58,4 +58,4 @@ def inject_env_vars():
 
 # Do I have to do this in the pipeline call?
 # Or can I do it here?
-inject_env_vars()
+#inject_env_vars()

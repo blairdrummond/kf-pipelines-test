@@ -1,14 +1,18 @@
 #!/bin/python3
 
-EXPERIMENT_NAME = "wIFR-Sensitivity-Analysis"
-OUTPUT_BUCKET = 's3://blairs-test/bleepbloop'
 
 import re
-assert re.match('^[\w-_]$', EXPERIMENT_NAME)
+nicename = re.compile('^[0-9a-zA-Z_-]+$')
 
-# In this example
-PIPELINE_NAME = "Ken's Pipeline"
+
+EXPERIMENT_NAME = "wIFR-Sensitivity-Analysis"
+OUTPUT_BUCKET = 's3://blairs-test/bleepbloop'
+PIPELINE_NAME = "Ken-Pipeline"
 IMAGE_NAME = "blair-kf-pipeline-test"
+
+assert nicename.match(EXPERIMENT_NAME)
+assert nicename.match(PIPELINE_NAME)
+
 
 # Ken's experiment
 # This gets used in the sensitivity simulation.
@@ -76,7 +80,7 @@ def sensitivity_simulation(output):
         the_pipeline(param,  f'{output}/data/{i}')
 
     # Do you need this?
-    # defaults.inject_env_vars()
+    defaults.inject_env_vars()
 
 from kfp import compiler
 compiler.Compiler().compile(
