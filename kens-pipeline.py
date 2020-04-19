@@ -1,5 +1,7 @@
 #!/bin/python3
 
+# TODO: Pod resource requests?
+
 import json
 import re
 nicename = re.compile('^[0-9a-zA-Z_-]+$')
